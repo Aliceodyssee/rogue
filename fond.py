@@ -9,6 +9,12 @@ for i in range(14) :
         L.append(0)
     screenMap.append(L)
 
+walls_COLOR = (220, 220, 220)
+WHITE = (255, 255, 255)
+dancefloor_COLOR = (128, 128, 0)
+corridor_COLOR = (192, 16, 16)
+door_COLOR = (92, 16, 16)
+
 #liste des positions de chaque type d'objet
 L_pos_ceiling = [(1,1), (1,2), (1,3), (1,4), (1,5), (1,6),
                 (2,12), (2,13), (2,14), (2,15), (2,16), (2,17), (2,18),
@@ -67,5 +73,33 @@ for i in range(len(L_pos_corridor)):
 for i in range(len(L_pos_dancefloor)):
     screenMap[L_pos_dancefloor[i][0]][L_pos_dancefloor[i][1]]= "."
 
+W, H = 20, 20
+X, Y = 30, 30
+
+pg.init()
+screen_img = pg.display.set_mode((X * W, Y * H))
+clock = pg.time.Clock()
+
+for i in range(14):
+    for j in range(26):
+        if screenMap[i][j] == ".":
+            rect = pg.Rect( i * W, j * H, W, H)
+            pg.draw.rect(screen_img, dancefloor_COLOR, rect)
+        if screenMap[i][j] == "#":
+            rect = pg.Rect( i * W, j * H, W, H)
+            pg.draw.rect(screen_img, corridor_COLOR, rect)
+        if screenMap[i][j] == "+":
+            rect = pg.Rect( i * W, j * H, W, H)
+            pg.draw.rect(screen_img, door_COLOR, rect)
+        if screenMap[i][j] == "0":
+            rect = pg.Rect( i * W, j * H, W, H)
+            pg.draw.rect(screen_img, WHITE, rect)
+        if screenMap[i][j] =="-" or screenMap[i][j] == "|":
+            rect = pg.Rect( i * W, j * H, W, H)
+            pg.draw.rect(screen_img, walls_COLOR, rect)
+
 
 print(np.array(screenMap))
+running = True
+while running:
+    pg.display.update()
