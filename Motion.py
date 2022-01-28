@@ -3,12 +3,20 @@ import pygame as pg
 import numpy as np
 from CharacterClass import Character
 
+player = Character("@",2,2)
 screenMap = []
 for i in range(14) :
     L = []
     for j in range(26) :
         L.append(0)
     screenMap.append(L)
+
+walls_COLOR = (220, 220, 220)
+WHITE = (255, 255, 255)
+dancefloor_COLOR = (128, 128, 0)
+corridor_COLOR = (192, 16, 16)
+door_COLOR = (92, 16, 16)
+player_COLOR = (253,108,158)
 
 #liste des positions de chaque type d'objet
 L_pos_ceiling = [(1,1), (1,2), (1,3), (1,4), (1,5), (1,6),
@@ -22,7 +30,7 @@ L_pos_walls = [ (2,1), (3,1), (4,1), (5,1), (6,1), (7,1),
                 (2,6), (3,6), (4,6), (6,6), (7,6),
                 (3,12),(4,12),(5,12),(6,12),(8,12),
                 (7,18),(4,18),(5,18),(6,18),(8,18),
-                (7,19),(8,19),(9,19), 
+                (7,19),(8,19),(9,19),
                 (7,23),(8,23),(9,23)]
 
 L_pos_doors = [(8,2),(5,6),(7,12),(9,17),(3,18),(10,21)]
@@ -51,25 +59,53 @@ for i in range(3,9):
 for i in range(7,10):
     for j in range(20,23):
         L_pos_dancefloor.append((i,j))
-        
-#on les met dans le screenMap
-for i in range(len(L_pos_ceiling)):
-    screenMap[L_pos_ceiling[i][0]][L_pos_ceiling[i][1]]= "-"
 
-for i in range(len(L_pos_walls)):
-    screenMap[L_pos_walls[i][0]][L_pos_walls[i][1]]= "|"
+def background():  
+    #on les met dans le screenMap
+    for i in range(len(L_pos_ceiling)):
+        screenMap[L_pos_ceiling[i][0]][L_pos_ceiling[i][1]]= "-"
 
-for i in range(len(L_pos_doors)):
-    screenMap[L_pos_doors[i][0]][L_pos_doors[i][1]]= "+"
+    for i in range(len(L_pos_walls)):
+        screenMap[L_pos_walls[i][0]][L_pos_walls[i][1]]= "|"
 
-for i in range(len(L_pos_corridor)):
-    screenMap[L_pos_corridor[i][0]][L_pos_corridor[i][1]]= "#"
+    for i in range(len(L_pos_doors)):
+        screenMap[L_pos_doors[i][0]][L_pos_doors[i][1]]= "+"
 
-for i in range(len(L_pos_dancefloor)):
-    screenMap[L_pos_dancefloor[i][0]][L_pos_dancefloor[i][1]]= "."
+    for i in range(len(L_pos_corridor)):
+        screenMap[L_pos_corridor[i][0]][L_pos_corridor[i][1]]= "#"
+
+    for i in range(len(L_pos_dancefloor)):
+        screenMap[L_pos_dancefloor[i][0]][L_pos_dancefloor[i][1]]= "."
+    for i in range(14):
+        for j in range(26):
+            if screenMap[i][j] == ".":
+                rect = pg.Rect( i * W, j * H, W, H)
+                pg.draw.rect(screen_img, dancefloor_COLOR, rect)
+            if screenMap[i][j] == "#":
+                rect = pg.Rect( i * W, j * H, W, H)
+                pg.draw.rect(screen_img, corridor_COLOR, rect)
+            if screenMap[i][j] == "+":
+                rect = pg.Rect( i * W, j * H, W, H)
+                pg.draw.rect(screen_img, door_COLOR, rect)
+            if screenMap[i][j] == "0":
+                rect = pg.Rect( i * W, j * H, W, H)
+                pg.draw.rect(screen_img, WHITE, rect)
+            if screenMap[i][j] =="-" or screenMap[i][j] == "|":
+                rect = pg.Rect( i * W, j * H, W, H)
+                pg.draw.rect(screen_img, walls_COLOR, rect)
+
+
+W, H = 20, 20
+X, Y = 30, 30
+
+pg.init()
+screen_img = pg.display.set_mode((X * W, Y * H))
+clock = pg.time.Clock()
+
 
 
 print(np.array(screenMap))
+
 
 
 
@@ -77,29 +113,42 @@ W, H = 20, 20
 X, Y = 30, 30
 
 DIRECTIONS = {
-    "DOWN": (-1, 0),
-    "UP": (+1, 0),
-    "RIGHT": (0, +1),
-    "LEFT": (0, -1),
+    "DOWN": (0, +1),
+    "UP": (0, -1),
+    "RIGHT": (+1, 0),
+    "LEFT": (-1, 0),
 }
 
 direction = DIRECTIONS["DOWN"]
-def draw_background():
-    pass
 
-player = Character("@",0,1)
 
-def draw_background():
-    screen.fill((255, 255, 255))
+
+screen_copy=screenMap.copy()
+
+rect = pg.Rect((player.x)*W, (player.y)*H,W,H)
+pg.draw.rect(screen_img, player_COLOR, rect)
 
 def move_player(player,direction):
+    
     x,y = player.x,player.y
     dx,dy = direction
-    new_position=x+dx,y+dy
-    if ((screenMap[x+dx][y+dy] == ".") or (screenMap[x+dx][y+dy] =="#") or (screenMap[x+dx][y+dy] == "-")):
-        screenMap[x][y]="."
+
+    if ((screenMap[x+dx][y+dy] == ".") or (screenMap[x+dx][y+dy] =="#") or (screenMap[x+dx][y+dy] == "+")):
+        screenMap[x][y]=screen_copy[x][y]
+
+        if screenMap[x][y] == ".":
+            rect = pg.Rect(x*W,y*H,W,H)
+            pg.draw.rect(screen_img, dancefloor_COLOR, rect)
+        if screenMap[x][y] == "#":
+            rect = pg.Rect(x*W,y*H,W,H)
+            pg.draw.rect(screen_img, corridor_COLOR, rect)
+        if screenMap[x][y] == "+":
+            rect = pg.Rect(x*W,y*H,W,H)
+            pg.draw.rect(screen_img, door_COLOR, rect)
         player.move(dx,dy)
         screenMap[x+dx][y+dy]=player.name
+        rect = pg.Rect((x+dx)*W, (y+dy)*H,W,H)
+        pg.draw.rect(screen_img, player_COLOR, rect)
 
 
 
@@ -112,7 +161,7 @@ clock = pg.time.Clock()
 running = True
 while running:
 
-    clock.tick(4)
+    clock.tick(1)
 
     # on itère sur tous les évênements qui ont eu lieu depuis le précédent appel
     # ici donc tous les évènements survenus durant la seconde précédente
@@ -135,9 +184,8 @@ while running:
             # si la touche est "Q" on veut quitter le programme
             elif event.key == pg.K_q:
                 running = False
-
+    background()
     move_player(player, direction)
-    draw_background()
     
 
     pg.display.update()
