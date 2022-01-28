@@ -97,7 +97,9 @@ def background():
         screenMap[4][4]="j"
         rect = pg.Rect((4)*W, (4)*H,W,H)
         pg.draw.rect(screen_img, (121, 248, 248), rect)
-
+    else:
+        rect = pg.Rect((4)*W, (4)*H,W,H)
+        pg.draw.rect(screen_img, dancefloor_COLOR, rect)
 
 W, H = 20, 20
 X, Y = 30, 30
