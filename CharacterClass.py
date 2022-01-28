@@ -1,9 +1,11 @@
 class Character:
-    def __init__(self,name):
+    def __init__(self, name, x, y):
         self.name = name
         self.vp=10 #Le personnage commence le jeu à 3 vies
         self.purse = 0
         self.listItems = []
+        self.x = x
+        self.y = y
       
     
     def add_item(self,item):
@@ -24,6 +26,10 @@ class Character:
         else:
             if not(boolEarn):
                 self.vp -= value
+    
+    def move(self,dx,dy):
+        self.x += dx
+        self.y += dy
 
 class Item:
     def __init__(self, name, char):

@@ -2,12 +2,12 @@ from random import choice, randint
 import pygame as pg
 import numpy as np
 
-screen = []
+screenMap = []
 for i in range(14) :
     L = []
     for j in range(26) :
         L.append(0)
-    screen.append(L)
+    screenMap.append(L)
 
 #liste des positions de chaque type d'objet
 L_pos_ceiling = [(1,1), (1,2), (1,3), (1,4), (1,5), (1,6),
@@ -51,21 +51,21 @@ for i in range(7,10):
     for j in range(20,23):
         L_pos_dancefloor.append((i,j))
         
-#on les met dans le screen
+#on les met dans le screenMap
 for i in range(len(L_pos_ceiling)):
-    screen[L_pos_ceiling[i][0]][L_pos_ceiling[i][1]]= "-"
+    screenMap[L_pos_ceiling[i][0]][L_pos_ceiling[i][1]]= "-"
 
 for i in range(len(L_pos_walls)):
-    screen[L_pos_walls[i][0]][L_pos_walls[i][1]]= "|"
+    screenMap[L_pos_walls[i][0]][L_pos_walls[i][1]]= "|"
 
 for i in range(len(L_pos_doors)):
-    screen[L_pos_doors[i][0]][L_pos_doors[i][1]]= "+"
+    screenMap[L_pos_doors[i][0]][L_pos_doors[i][1]]= "+"
 
 for i in range(len(L_pos_corridor)):
-    screen[L_pos_corridor[i][0]][L_pos_corridor[i][1]]= "#"
+    screenMap[L_pos_corridor[i][0]][L_pos_corridor[i][1]]= "#"
 
 for i in range(len(L_pos_dancefloor)):
-    screen[L_pos_dancefloor[i][0]][L_pos_dancefloor[i][1]]= "."
+    screenMap[L_pos_dancefloor[i][0]][L_pos_dancefloor[i][1]]= "."
 
 
-print(np.array(screen))
+print(np.array(screenMap))
