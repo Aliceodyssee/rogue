@@ -119,7 +119,7 @@ DIRECTIONS = {
     "LEFT": (-1, 0),
 }
 
-direction = DIRECTIONS["DOWN"]
+direction = (0,0)
 
 
 
@@ -161,7 +161,7 @@ clock = pg.time.Clock()
 running = True
 while running:
 
-    clock.tick(1)
+    clock.tick(4)
 
     # on itère sur tous les évênements qui ont eu lieu depuis le précédent appel
     # ici donc tous les évènements survenus durant la seconde précédente
@@ -186,7 +186,7 @@ while running:
                 running = False
     background()
     move_player(player, direction)
-    
+    direction=(0,0)
 
     pg.display.update()
 
