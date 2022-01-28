@@ -30,5 +30,4 @@ class Item:
         self.name= name
         self.char= char
 
-potion = Item("potion","j")
 
