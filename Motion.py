@@ -93,6 +93,10 @@ def background():
             if screenMap[i][j] =="-" or screenMap[i][j] == "|":
                 rect = pg.Rect( i * W, j * H, W, H)
                 pg.draw.rect(screen_img, walls_COLOR, rect)
+    if screenMap[4][4]!="@":
+        screenMap[4][4]="j"
+        rect = pg.Rect((4)*W, (4)*H,W,H)
+        pg.draw.rect(screen_img, (121, 248, 248), rect)
 
 
 W, H = 20, 20
@@ -128,30 +132,53 @@ screen_copy=screenMap.copy()
 rect = pg.Rect((player.x)*W, (player.y)*H,W,H)
 pg.draw.rect(screen_img, player_COLOR, rect)
 
+
+
 def move_player(player,direction):
     
     x,y = player.x,player.y
     dx,dy = direction
 
-    if ((screenMap[x+dx][y+dy] == ".") or (screenMap[x+dx][y+dy] =="#") or (screenMap[x+dx][y+dy] == "+")):
+    if ((screenMap[x+dx][y+dy] == ".") or (screenMap[x+dx][y+dy] =="#") or (screenMap[x+dx][y+dy] == "+") or (screenMap[x+dx][y+dy]=="j")):
         screenMap[x][y]=screen_copy[x][y]
 
         if screenMap[x][y] == ".":
             rect = pg.Rect(x*W,y*H,W,H)
             pg.draw.rect(screen_img, dancefloor_COLOR, rect)
+            if (screenMap[x+dx][y+dy]=="j"):
+                screenMap[x+dx][y+dy]=player.name
+                pg.display.set_caption("Potion récupérée ")
+                rect = pg.Rect((x+dx)*W,(y+dy)*H,W,H)
+                pg.draw.rect(screen_img, dancefloor_COLOR, rect)
         if screenMap[x][y] == "#":
             rect = pg.Rect(x*W,y*H,W,H)
+            if (screenMap[x+dx][y+dy]=="j"):
+                screenMap[x+dx][y+dy]=player.name
+                pg.display.set_caption("Potion récupérée ")
+                rect = pg.Rect((x)*W,(y)*H,W,H)
+                pg.draw.rect(screen_img, dancefloor_COLOR, rect)
             pg.draw.rect(screen_img, corridor_COLOR, rect)
+            if (screenMap[x+dx][y+dy]=="j"):
+                screenMap[x+dx][y+dy]=player.name
+                pg.display.set_caption("Potion récupérée ")
+                rect = pg.Rect((x)*W,(y)*H,W,H)
+                pg.draw.rect(screen_img, dancefloor_COLOR, rect)
         if screenMap[x][y] == "+":
             rect = pg.Rect(x*W,y*H,W,H)
             pg.draw.rect(screen_img, door_COLOR, rect)
+            if (screenMap[x+dx][y+dy]=="j"):
+                screenMap[x+dx][y+dy]=player.name
+                pg.display.set_caption("Potion récupérée ")
+                rect = pg.Rect((x)*W,(y)*H,W,H)
+                pg.draw.rect(screen_img, dancefloor_COLOR, rect)
         player.move(dx,dy)
         screenMap[x+dx][y+dy]=player.name
         rect = pg.Rect((x+dx)*W, (y+dy)*H,W,H)
         pg.draw.rect(screen_img, player_COLOR, rect)
+    
 
 
-
+    
 
 
 pg.init()
@@ -181,13 +208,20 @@ while running:
                 direction = DIRECTIONS["RIGHT"]
             elif event.key == pg.K_LEFT or event.key == pg.K_j:
                 direction = DIRECTIONS["LEFT"]
+            elif event.key == pg.K_t:
+                pg.display.set_caption(f"sac à dos : {player.listItems} ")
+
             # si la touche est "Q" on veut quitter le programme
             elif event.key == pg.K_q:
                 running = False
     background()
     move_player(player, direction)
     direction=(0,0)
-
+    '''while(player.x,player.y != 4,4):
+        rect = pg.Rect((4)*W, (4)*H,W,H)
+        pg.draw.rect(screen_img, (121, 248, 248), rect)
+    '''
+ 
     pg.display.update()
 
 
